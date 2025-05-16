@@ -21,6 +21,7 @@ public class SecurityConfig {
         httpSecurity
                 .authorizeHttpRequests( auth -> auth
                         .requestMatchers("api/admin/**").hasRole("ADMIN")
+                        .requestMatchers("api/user/**").hasRole("USER")
                         .anyRequest().permitAll()
                 )
                 .csrf(csrf -> csrf.disable())
@@ -42,6 +43,12 @@ public class SecurityConfig {
                 .roles("ADMIN")
                 .build();
 
-        return new InMemoryUserDetailsManager(user);
+        UserDetails user2 = User.builder()
+                .username("m8z")
+                .password(passwordEncoder.encode("m8z123"))
+                .roles("USER")
+                .build();
+
+        return new InMemoryUserDetailsManager(user, user2);
     }
 }

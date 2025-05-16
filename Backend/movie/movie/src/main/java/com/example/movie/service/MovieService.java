@@ -16,5 +16,6 @@ public interface MovieService {
     List<Movie> saveAll(List<MovieDto> movieList);
     void deleteAll(List<MovieDto> movieList);
     Movie findByImdbID(String id);
+    Page<Movie> findMovieByTitle(String query, Pageable pageable);
 
 }
