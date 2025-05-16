@@ -16,7 +16,7 @@ import java.util.List;
 public class AdminController {
     @Autowired
     private MovieService movieService;
-    @GetMapping("/search")
+    @GetMapping("/omdb/search")
     public List<MovieDto> loadMoviesFromOMDB(@RequestParam String query){
         return movieService.loadMoviesFromOMDB(query);
     }
@@ -26,10 +26,14 @@ public class AdminController {
         Pageable pageable = PageRequest.of(page, size);
         return movieService.loadMoviesFromDB(pageable);
     }
-
     
     @PostMapping("/localdb")
     public Movie saveMovieToDB(@RequestBody MovieDto movieDto){
         return movieService.saveToLocalDB(movieDto);
+    }
+
+    @DeleteMapping("localdb/{id}")
+    void delete (@PathVariable Long id){
+        movieService.delete(id);
     }
 }

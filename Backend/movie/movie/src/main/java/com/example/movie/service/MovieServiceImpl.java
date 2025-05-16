@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MovieServiceImpl implements MovieService{
@@ -45,4 +46,21 @@ public class MovieServiceImpl implements MovieService{
     public Page<Movie> loadMoviesFromDB(Pageable pageable) {
         return movieRepo.findAll(pageable);
     }
+
+    @Override
+    public Movie findById(Long id) {
+        Optional<Movie> movie = movieRepo.findById(id);
+        if(movie.isEmpty()){
+            throw new RuntimeException("Movie Not Found!!");
+        }
+        return movie.get();
+    }
+
+    @Override
+    public void delete(Long id) {
+        Movie movie = findById(id);
+        movieRepo.delete(movie);
+    }
+
+
 }

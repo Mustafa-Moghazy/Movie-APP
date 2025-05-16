@@ -11,5 +11,7 @@ public interface MovieService {
     List<MovieDto> loadMoviesFromOMDB(String query);
     Movie saveToLocalDB(MovieDto movieDto);
     Page<Movie> loadMoviesFromDB(Pageable pageable);
+    Movie findById(Long id);
+    void delete(Long id);
 
 }
