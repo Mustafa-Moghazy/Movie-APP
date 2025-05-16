@@ -3,6 +3,7 @@ package com.example.movie.service;
 import com.example.movie.dto.MovieDto;
 import com.example.movie.dto.OmdbResponseDto;
 import com.example.movie.entity.Movie;
+import com.example.movie.mapper.MovieMapper;
 import com.example.movie.repository.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,12 +14,15 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class MovieServiceImpl implements MovieService{
 
     @Autowired
     private MovieRepository movieRepo;
+    @Autowired
+    private MovieMapper mapper;
     @Override
     public List<MovieDto> loadMoviesFromOMDB(String query) {
         String url = "https://www.omdbapi.com/?s=" + query + "&apikey=40ebffc6";
@@ -33,12 +37,7 @@ public class MovieServiceImpl implements MovieService{
 
     @Override
     public Movie saveToLocalDB(MovieDto movieDto) {
-        Movie movie = new Movie();
-        movie.setTitle(movieDto.getTitle());
-        movie.setYear(movieDto.getYear());
-        movie.setType(movieDto.getType());
-        movie.setImdbID(movieDto.getImdbID());
-        movie.setPoster(movieDto.getPoster());
+        Movie movie = mapper.toEntity(movieDto);
         return movieRepo.save(movie);
     }
 
@@ -60,6 +59,29 @@ public class MovieServiceImpl implements MovieService{
     public void delete(Long id) {
         Movie movie = findById(id);
         movieRepo.delete(movie);
+    }
+
+    @Override
+    public List<Movie> saveAll(List<MovieDto> movieList) {
+        List<Movie> newMovieList = mapper.toEntityList(movieList);
+        return movieRepo.saveAll(newMovieList);
+    }
+
+    @Override
+    public void deleteAll(List<MovieDto> movieList) {
+        List<Movie> movieListToDelete = movieList.stream()
+                .map(movieDto ->  findByImdbID(movieDto.getImdbID()))
+                .collect(Collectors.toList());
+        movieRepo.deleteAll(movieListToDelete);
+    }
+
+    @Override
+    public Movie findByImdbID(String id) {
+        Optional<Movie> movie = movieRepo.findMovieByImdbID(id);
+        if(movie.isEmpty()){
+            throw new RuntimeException("Movie Not Found!");
+        }
+        return movie.get();
     }
 
 

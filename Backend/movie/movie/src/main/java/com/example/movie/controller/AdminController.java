@@ -36,4 +36,14 @@ public class AdminController {
     void delete (@PathVariable Long id){
         movieService.delete(id);
     }
+
+    @PostMapping("/batch")
+    public List<Movie> addMovieList(@RequestBody List<MovieDto> movieList){
+        return movieService.saveAll(movieList);
+    }
+
+    @DeleteMapping("/batch")
+    public void removeMovieList(@RequestBody List<MovieDto> movieList){
+        movieService.deleteAll(movieList);
+    }
 }

@@ -13,5 +13,8 @@ public interface MovieService {
     Page<Movie> loadMoviesFromDB(Pageable pageable);
     Movie findById(Long id);
     void delete(Long id);
+    List<Movie> saveAll(List<MovieDto> movieList);
+    void deleteAll(List<MovieDto> movieList);
+    Movie findByImdbID(String id);
 
 }
