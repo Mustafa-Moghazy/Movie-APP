@@ -7,7 +7,7 @@ public class MovieDto {
     private String title;
     @JsonProperty("Year")
     private String year;
-    @JsonProperty("ImdbID")
+    @JsonProperty("imdbID")
     private String imdbID;
     @JsonProperty("Type")
     private String type;

@@ -1,12 +1,10 @@
 package com.example.movie.controller;
 
 import com.example.movie.dto.MovieDto;
+import com.example.movie.entity.Movie;
 import com.example.movie.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -18,5 +16,11 @@ public class AdminController {
     @GetMapping()
     public List<MovieDto> loadMoviesFromOMDB(@RequestParam String query){
         return movieService.loadMoviesFromOMDB(query);
+    }
+
+    
+    @PostMapping()
+    public Movie saveMovieToDB(@RequestBody MovieDto movieDto){
+        return movieService.saveToLocalDB(movieDto);
     }
 }

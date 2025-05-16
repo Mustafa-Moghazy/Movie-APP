@@ -30,6 +30,12 @@ public class MovieServiceImpl implements MovieService{
 
     @Override
     public Movie saveToLocalDB(MovieDto movieDto) {
-        return null;
+        Movie movie = new Movie();
+        movie.setTitle(movieDto.getTitle());
+        movie.setYear(movieDto.getYear());
+        movie.setType(movieDto.getType());
+        movie.setImdbID(movieDto.getImdbID());
+        movie.setPoster(movieDto.getPoster());
+        return movieRepo.save(movie);
     }
 }
