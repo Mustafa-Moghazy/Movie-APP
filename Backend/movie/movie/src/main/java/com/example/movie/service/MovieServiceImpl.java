@@ -5,6 +5,8 @@ import com.example.movie.dto.OmdbResponseDto;
 import com.example.movie.entity.Movie;
 import com.example.movie.repository.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -37,5 +39,10 @@ public class MovieServiceImpl implements MovieService{
         movie.setImdbID(movieDto.getImdbID());
         movie.setPoster(movieDto.getPoster());
         return movieRepo.save(movie);
+    }
+
+    @Override
+    public Page<Movie> loadMoviesFromDB(Pageable pageable) {
+        return movieRepo.findAll(pageable);
     }
 }

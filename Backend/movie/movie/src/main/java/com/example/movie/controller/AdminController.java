@@ -4,6 +4,9 @@ import com.example.movie.dto.MovieDto;
 import com.example.movie.entity.Movie;
 import com.example.movie.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,13 +16,19 @@ import java.util.List;
 public class AdminController {
     @Autowired
     private MovieService movieService;
-    @GetMapping()
+    @GetMapping("/search")
     public List<MovieDto> loadMoviesFromOMDB(@RequestParam String query){
         return movieService.loadMoviesFromOMDB(query);
     }
 
+    @GetMapping("/localdb")
+    public Page<Movie> loadMoviesFromDb(@RequestParam int page,@RequestParam int size){
+        Pageable pageable = PageRequest.of(page, size);
+        return movieService.loadMoviesFromDB(pageable);
+    }
+
     
-    @PostMapping()
+    @PostMapping("/localdb")
     public Movie saveMovieToDB(@RequestBody MovieDto movieDto){
         return movieService.saveToLocalDB(movieDto);
     }
