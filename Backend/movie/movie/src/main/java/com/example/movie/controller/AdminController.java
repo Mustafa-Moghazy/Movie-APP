@@ -22,7 +22,7 @@ public class AdminController {
     }
 
     @GetMapping("/localdb")
-    public Page<Movie> loadMoviesFromDb(@RequestParam int page,@RequestParam int size){
+    public Page<Movie> loadMoviesFromDb(@RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "5") int size){
         Pageable pageable = PageRequest.of(page, size);
         return movieService.loadMoviesFromDB(pageable);
     }

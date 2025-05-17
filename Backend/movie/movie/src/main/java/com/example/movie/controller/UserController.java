@@ -15,7 +15,7 @@ public class UserController {
     private MovieService movieService;
 
     @GetMapping("")
-    public Page<Movie> loadMoviesFromDB(@RequestParam int page, @RequestParam int size){
+    public Page<Movie> loadMoviesFromDB(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size){
         Pageable pageable = PageRequest.of(page, size);
         return movieService.loadMoviesFromDB(pageable);
     }

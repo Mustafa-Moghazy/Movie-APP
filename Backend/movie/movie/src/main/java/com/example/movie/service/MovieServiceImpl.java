@@ -3,8 +3,11 @@ package com.example.movie.service;
 import com.example.movie.dto.MovieDto;
 import com.example.movie.dto.OmdbResponseDto;
 import com.example.movie.entity.Movie;
+import com.example.movie.exception.MovieNotFoundException;
 import com.example.movie.mapper.MovieMapper;
 import com.example.movie.repository.MovieRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,8 +26,12 @@ public class MovieServiceImpl implements MovieService{
     private MovieRepository movieRepo;
     @Autowired
     private MovieMapper mapper;
+    private final Logger logger = LoggerFactory.getLogger(MovieServiceImpl.class);
+
     @Override
     public List<MovieDto> loadMoviesFromOMDB(String query) {
+        logger.info("fetching movies from OMDBAPI with query : {}", query);
+
         String url = "https://www.omdbapi.com/?s=" + query + "&apikey=40ebffc6";
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<OmdbResponseDto> result = restTemplate.getForEntity(url, OmdbResponseDto.class);
@@ -32,43 +39,54 @@ public class MovieServiceImpl implements MovieService{
         if(response != null && response.getResponse().equals("True")) {
             return response.getSearch();
         }
-        throw new RuntimeException("No Response Data Found");
+
+        logger.error("OMDBAPI Return Empty Response for query : {}", query);
+        throw new MovieNotFoundException("No Response Data Found with query : " + query);
     }
 
     @Override
     public Movie saveToLocalDB(MovieDto movieDto) {
+        logger.info("Saving Movie into database {} : ", movieDto.getTitle());
         Movie movie = mapper.toEntity(movieDto);
         return movieRepo.save(movie);
     }
 
     @Override
     public Page<Movie> loadMoviesFromDB(Pageable pageable) {
+        logger.info("Loading Movies From Database...");
         return movieRepo.findAll(pageable);
     }
 
     @Override
     public Movie findById(Long id) {
+        logger.info("Finding movie by ID: {}", id);
         Optional<Movie> movie = movieRepo.findById(id);
         if(movie.isEmpty()){
-            throw new RuntimeException("Movie Not Found!!");
+            logger.warn("No Movies Found with Id : {}", id);
+            throw new MovieNotFoundException("Movie Not Found!! ID : " + id);
         }
+        logger.info("Return Movie with id : {}", id);
         return movie.get();
     }
 
     @Override
     public void delete(Long id) {
+        logger.info("deleting Movie with id : {}", id);
         Movie movie = findById(id);
         movieRepo.delete(movie);
+        logger.info("Movie with id : {} deleted", id);
     }
 
     @Override
     public List<Movie> saveAll(List<MovieDto> movieList) {
+        logger.info("saving list of movies into local database...");
         List<Movie> newMovieList = mapper.toEntityList(movieList);
         return movieRepo.saveAll(newMovieList);
     }
 
     @Override
     public void deleteAll(List<MovieDto> movieList) {
+        logger.info("deleting list of movies from local database...");
         List<Movie> movieListToDelete = movieList.stream()
                 .map(movieDto ->  findByImdbID(movieDto.getImdbID()))
                 .collect(Collectors.toList());
@@ -77,15 +95,18 @@ public class MovieServiceImpl implements MovieService{
 
     @Override
     public Movie findByImdbID(String id) {
+        logger.info("Finding movie by ImdbID : {}", id);
         Optional<Movie> movie = movieRepo.findMovieByImdbID(id);
         if(movie.isEmpty()){
-            throw new RuntimeException("Movie Not Found!");
+            logger.warn("No movies found with ImdbId: {}", id);
+            throw new MovieNotFoundException("Movie Not Found with ImdbId : " + id);
         }
         return movie.get();
     }
 
     @Override
     public Page<Movie> findMovieByTitle(String query, Pageable pageable) {
+        logger.info("Finding movies by title : {}", query);
         return movieRepo.findMovieByTitleContainingIgnoreCase(query, pageable);
     }
 
