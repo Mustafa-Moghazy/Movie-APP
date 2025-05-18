@@ -1,0 +1,60 @@
+<div class="container">
+  <!-- Search & Actions -->
+  <div class="search-row">
+    <input [(ngModel)]="searchQuery" placeholder="Search movies..." />
+    <div class="actions">
+      <button class="btn-primary" (click)="searchOnOMDB()">Search OMDB</button>
+      <button class="btn-secondary" (click)="searchOnLocalDB()">
+        Search Local DB
+      </button>
+    </div>
+  </div>
+
+  <!-- OMDB Section -->
+  <section>
+    <div class="section-header">
+      <h2>OMDB Results</h2>
+      <button class="btn-success" (click)="batchAddSelected()">
+        Add Selected to Local DB
+      </button>
+    </div>
+
+    <div class="movie-list">
+      <div class="movie-card" *ngFor="let movie of moviesFromOMDB">
+        <img [src]="movie.Poster" [alt]="movie.Title" />
+        <div class="movie-card-content">
+          <h4>{{ movie.Title }}</h4>
+          <p>({{ movie.Year }})</p>
+          <button (click)="toggleSelect(movie.imdbID)">
+            {{ selectedMovies.has(movie.imdbID) ? "Deselect" : "Select" }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Local DB Section -->
+  <section>
+    <div class="section-header">
+      <h2>Local DB Movies</h2>
+      <button class="btn-danger" (click)="batchRemoveSelected()">
+        Remove Selected from Local DB
+      </button>
+    </div>
+
+    <div class="movie-list">
+      <div class="movie-card" *ngFor="let movie of moviesFromLocalDB">
+        <img [src]="movie.poster" [alt]="movie.title" />
+        <div class="movie-card-content">
+          <input
+            type="checkbox"
+            [checked]="selectedMovies.has(movie.imdbID)"
+            (change)="toggleSelect(movie.imdbID)"
+          />
+          <h4>{{ movie.title }}</h4>
+          <p>({{ movie.year }})</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

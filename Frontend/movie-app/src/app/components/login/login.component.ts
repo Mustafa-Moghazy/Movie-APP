@@ -24,7 +24,13 @@ export class LoginComponent {
       .login({ username: this.username, password: this.password })
       .subscribe({
         next: () => {
-          this.router.navigateByUrl('/app'); // Redirect after successful login
+          console.log('Login successful');
+          const role = this.authService.getRoleFromToken();
+          if (role === 'ADMIN') {
+            this.router.navigateByUrl('/admin-dashboard');
+          } else {
+            this.router.navigateByUrl('/user-dashboard');
+          }
         },
         error: (err) => {
           console.error('Login error', err);

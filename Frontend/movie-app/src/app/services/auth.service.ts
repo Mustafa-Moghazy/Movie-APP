@@ -30,6 +30,23 @@ export class AuthService {
     return localStorage.getItem(this.tokenKey);
   }
 
+  getRoleFromToken(): string | null {
+    const token = this.getToken();
+    if (!token) return null;
+
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      console.log('JWT Payload:', payload);
+
+      // Extract authority from roles array
+      const role = payload.roles?.[0]?.authority;
+      return role?.replace('ROLE_', '') || null; // returns 'ADMIN' instead of 'ROLE_ADMIN'
+    } catch (e) {
+      console.error('Invalid JWT token', e);
+      return null;
+    }
+  }
+
   logout(): void {
     localStorage.removeItem(this.tokenKey);
   }
