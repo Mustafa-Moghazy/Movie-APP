@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -30,15 +31,22 @@ public class MovieServiceImpl implements MovieService{
     private final Logger logger = LoggerFactory.getLogger(MovieServiceImpl.class);
 
     @Override
-    public List<MovieDto> loadMoviesFromOMDB(String query) {
+    public Page<MovieDto> loadMoviesFromOMDB(String query, Pageable pageable) {
         logger.info("fetching movies from OMDBAPI with query : {}", query);
-
-        String url = "https://www.omdbapi.com/?s=" + query + "&apikey=40ebffc6";
+        int omdbPage = pageable.getPageNumber() + 1;
+        String url = "https://www.omdbapi.com/?s=" + query + "&apikey=40ebffc6&page=" + omdbPage;
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<OmdbResponseDto> result = restTemplate.getForEntity(url, OmdbResponseDto.class);
         OmdbResponseDto response = result.getBody();
         if(response != null && response.getResponse().equals("True")) {
-            return response.getSearch();
+            List<MovieDto> movies =  response.getSearch();
+            int totalResults = Integer.parseInt(response.getTotalResults());
+
+            return new PageImpl<>(
+                    movies,
+                    pageable,
+                    totalResults
+            );
         }
 
         logger.error("OMDBAPI Return Empty Response for query : {}", query);

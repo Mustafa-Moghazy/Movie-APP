@@ -17,15 +17,23 @@ export class AdminDashboardComponent {
   moviesFromOMDB: MovieDto[] = [];
   selectedMovies: Set<string> = new Set();
 
+  currentPage = 0;
+  pageSize = 5;
+  totalPages = 0;
+
   constructor(private adminService: AdminService, private router: Router) {}
 
-  searchOnOMDB() {
-    this.adminService.searchOMDB(this.searchQuery).subscribe(
-      (movies) => {
-        this.moviesFromOMDB = movies;
-      },
-      (error) => console.error('OMDB search failed', error)
-    );
+  searchOnOMDB(page: number = 0): void {
+    this.currentPage = page;
+    this.adminService
+      .searchOMDB(this.searchQuery, this.currentPage, this.pageSize)
+      .subscribe({
+        next: (response) => {
+          this.moviesFromOMDB = response.content;
+          this.totalPages = response.totalPages;
+        },
+        error: (error) => console.error('OMDB search failed', error),
+      });
   }
 
   toggleSelect(imdbID: string) {
@@ -42,16 +50,28 @@ export class AdminDashboardComponent {
       alert('No movies selected!');
       return;
     }
-    this.adminService.batchAdd(moviesToAdd).subscribe(
-      (addedMovies) => {
+    this.adminService.batchAdd(moviesToAdd).subscribe({
+      next: (addedMovies) => {
         alert(`${addedMovies.length} movies added successfully!`);
         this.selectedMovies.clear();
       },
-      (error) => console.error('Batch add failed', error)
-    );
+      error: (error) => console.error('Batch add failed', error),
+    });
   }
 
   goToLocalMovies(): void {
     this.router.navigate(['/local-movies']);
+  }
+
+  prevPage(): void {
+    if (this.currentPage > 0) {
+      this.searchOnOMDB(this.currentPage - 1);
+    }
+  }
+
+  nextPage(): void {
+    if (this.currentPage < this.totalPages - 1) {
+      this.searchOnOMDB(this.currentPage + 1);
+    }
   }
 }

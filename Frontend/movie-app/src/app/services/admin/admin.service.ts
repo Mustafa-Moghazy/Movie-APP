@@ -12,10 +12,25 @@ export class AdminService {
   constructor(private http: HttpClient) {}
 
   // Search OMDB
-  searchOMDB(query: string): Observable<MovieDto[]> {
-    return this.http.get<MovieDto[]>(`${this.apiUrl}/omdb/search`, {
-      params: new HttpParams().set('query', query),
-    });
+  searchOMDB(
+    query: string,
+    page: number = 0,
+    size: number = 10
+  ): Observable<{
+    content: MovieDto[];
+    totalElements: number;
+    totalPages: number;
+  }> {
+    let params = new HttpParams()
+      .set('query', query)
+      .set('page', page.toString())
+      .set('size', size.toString());
+
+    return this.http.get<{
+      content: MovieDto[];
+      totalElements: number;
+      totalPages: number;
+    }>(`${this.apiUrl}/omdb/search`, { params });
   }
 
   loadMoviesFromDB(

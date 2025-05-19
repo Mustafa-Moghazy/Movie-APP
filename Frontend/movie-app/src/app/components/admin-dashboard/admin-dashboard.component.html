@@ -31,5 +31,16 @@
         </div>
       </div>
     </div>
+
+    <!-- Pagination Controls -->
+    <div class="pagination">
+      <button (click)="prevPage()" [disabled]="currentPage === 0">
+        Previous
+      </button>
+      <span>Page {{ currentPage + 1 }} of {{ totalPages }}</span>
+      <button (click)="nextPage()" [disabled]="currentPage >= totalPages - 1">
+        Next
+      </button>
+    </div>
   </section>
 </div>
