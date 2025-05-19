@@ -3,6 +3,7 @@ package com.example.movie.service;
 import com.example.movie.dto.MovieDto;
 import com.example.movie.dto.OmdbResponseDto;
 import com.example.movie.entity.Movie;
+import com.example.movie.exception.MovieAlreadyExistException;
 import com.example.movie.exception.MovieNotFoundException;
 import com.example.movie.mapper.MovieMapper;
 import com.example.movie.repository.MovieRepository;
@@ -47,6 +48,10 @@ public class MovieServiceImpl implements MovieService{
     @Override
     public Movie saveToLocalDB(MovieDto movieDto) {
         logger.info("Saving Movie into database {} : ", movieDto.getTitle());
+        Optional<Movie> existingMovie = movieRepo.findMovieByImdbID(movieDto.getImdbID());
+        if(!existingMovie.isEmpty()){
+            throw new MovieAlreadyExistException("Movie with ImdbID : " + movieDto.getImdbID() +" Was Added before");
+        }
         Movie movie = mapper.toEntity(movieDto);
         return movieRepo.save(movie);
     }
@@ -80,7 +85,10 @@ public class MovieServiceImpl implements MovieService{
     @Override
     public List<Movie> saveAll(List<MovieDto> movieList) {
         logger.info("saving list of movies into local database...");
-        List<Movie> newMovieList = mapper.toEntityList(movieList);
+        List<Movie> newMovieList = movieList.stream()
+                .filter(movieDto -> movieRepo.findMovieByImdbID(movieDto.getImdbID()).isEmpty() )
+                .map(movieDto -> mapper.toEntity(movieDto))
+                .collect(Collectors.toList());
         return movieRepo.saveAll(newMovieList);
     }
 
