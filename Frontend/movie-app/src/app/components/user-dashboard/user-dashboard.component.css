@@ -1,0 +1,76 @@
+.container {
+  max-width: 900px;
+  margin: auto;
+  padding: 1rem;
+}
+
+.search-bar {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.search-bar input {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+.search-bar button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  color: black;
+  background-color: #007bff;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  color: black;
+  background-color: #007bff;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.movie-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.movie-card {
+  width: 180px;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  overflow: hidden;
+  padding: 0.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  background-color: #fff;
+}
+
+.poster {
+  width: 100%;
+  height: auto;
+  border-radius: 6px;
+}
+
+.movie-info {
+  margin-top: 0.5rem;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.selected-movie {
+  margin-top: 2rem;
+  text-align: center;
+}
