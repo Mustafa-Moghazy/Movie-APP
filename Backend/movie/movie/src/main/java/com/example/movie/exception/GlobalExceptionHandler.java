@@ -13,4 +13,10 @@ public class GlobalExceptionHandler {
         String errorMessage = ex.getMessage();
         return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(MovieAlreadyExistException.class)
+    public ResponseEntity<String> handleMovieAlreadyExistException(MovieAlreadyExistException ex, WebRequest webRequest){
+        String errorMessage = ex.getMessage();
+        return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+    }
 }

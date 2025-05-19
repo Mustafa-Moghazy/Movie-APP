@@ -1,0 +1,120 @@
+.container {
+  max-width: 900px;
+  margin: auto;
+  padding: 1rem;
+}
+
+.search-bar {
+  width: 100%;
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.search-bar input {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+.search-bar button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  color: black;
+  background-color: #007bff;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  color: black;
+  background-color: #007bff;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.movie-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
+}
+.movie-card {
+  width: 180px;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  overflow: hidden;
+  padding: 0.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  background-color: #fff;
+}
+.movie-card:hover {
+  transform: scale(1.05);
+  transition: transform 0.3s ease;
+}
+
+.movie-card button {
+  margin-top: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  background-color: #28a745;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.movie-card button:hover {
+  background-color: #218838;
+}
+.movie-card img {
+  width: 100%;
+  height: auto;
+  border-radius: 6px;
+}
+.movie-info {
+  margin-top: 0.5rem;
+}
+.movie-info h3 {
+  font-size: 1.2rem;
+  margin: 0.5rem 0;
+}
+.movie-info p {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+.pagination button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  background-color: #007bff;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.pagination button:hover {
+  background-color: #0056b3;
+}
+.pagination button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+.pagination span {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  background-color: #f8f9fa;
+  color: #333;
+}
+.pagination span.active {
+  background-color: #007bff;
+  color: white;
+}

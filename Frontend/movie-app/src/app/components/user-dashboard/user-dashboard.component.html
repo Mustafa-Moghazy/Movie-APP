@@ -1,0 +1,37 @@
+<div class="container">
+  <h2>User Dashboard</h2>
+
+  <div class="search-bar">
+    <input type="text" [(ngModel)]="query" placeholder="Search by title" />
+    <button (click)="search()">Search</button>
+  </div>
+
+  <div class="movie-grid">
+    <div class="movie-card" *ngFor="let movie of movies">
+      <img [src]="movie.poster" alt="Poster" class="poster" />
+      <div class="movie-info">
+        <h3>{{ movie.title }}</h3>
+        <p><strong>Year:</strong> {{ movie.year }}</p>
+        <button *ngIf="movie.id !== undefined" (click)="selectMovie(movie.id)">
+          View Details
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="pagination">
+    <button (click)="prevPage()" [disabled]="page === 0">Previous</button>
+
+    <span>Page {{ page + 1 }} of {{ totalPages }}</span>
+
+    <button (click)="nextPage()" [disabled]="page >= totalPages - 1">
+      Next
+    </button>
+  </div>
+
+  <!-- <div *ngIf="selectedMovie" class="selected-movie">
+    <h3>{{ selectedMovie.title }}</h3>
+    <p><strong>Year:</strong> {{ selectedMovie.year }}</p>
+    <img [src]="selectedMovie.poster" alt="Selected Poster" width="200" />
+  </div> -->
+</div>

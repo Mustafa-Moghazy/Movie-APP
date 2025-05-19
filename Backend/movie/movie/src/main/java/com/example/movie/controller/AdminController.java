@@ -10,21 +10,27 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("api/admin/movies")
 public class AdminController {
     @Autowired
     private MovieService movieService;
     @GetMapping("/omdb/search")
-    public List<MovieDto> loadMoviesFromOMDB(@RequestParam String query){
-        return movieService.loadMoviesFromOMDB(query);
+    public Page<MovieDto> loadMoviesFromOMDB(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "5") int size, @RequestParam String query){
+        Pageable pageable = PageRequest.of(page, size);
+        return movieService.loadMoviesFromOMDB(query, pageable);
     }
 
     @GetMapping("/localdb")
     public Page<Movie> loadMoviesFromDb(@RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "5") int size){
         Pageable pageable = PageRequest.of(page, size);
         return movieService.loadMoviesFromDB(pageable);
+    }
+    @GetMapping("/localdb/search")
+    public Page<Movie> localDbSearch(@RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "5") int size,@RequestParam String query){
+        Pageable pageable = PageRequest.of(page, size);
+        return movieService.findMovieByTitle(query, pageable);
     }
     
     @PostMapping("/localdb")

@@ -1,0 +1,37 @@
+<div class="container">
+  <h2>Local DB Movies</h2>
+
+  <div class="search-bar">
+    <input [(ngModel)]="searchQuery" placeholder="Search in Local DB..." />
+    <button (click)="searchLocalDB()">Search</button>
+    <button (click)="batchRemoveSelected()">Remove Selected</button>
+    <button (click)="Back()">Back To AdminDashboard</button>
+  </div>
+
+  <div class="movie-grid">
+    <div class="movie-card" *ngFor="let movie of moviesFromLocalDB">
+      <img [src]="movie.poster" [alt]="movie.title" />
+      <div class="movie-card-content">
+        <h4>{{ movie.title }}</h4>
+        <p>({{ movie.year }})</p>
+        <button
+          (click)="toggleSelect(movie.imdbID)"
+          [class.selected]="selectedMovies.has(movie.imdbID)"
+          type="button"
+        >
+          {{ selectedMovies.has(movie.imdbID) ? "Deselect" : "Select" }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="pagination">
+    <button (click)="prevPage()" [disabled]="currentPage === 0">
+      Previous
+    </button>
+    <span>Page {{ currentPage + 1 }} of {{ totalPages }}</span>
+    <button (click)="nextPage()" [disabled]="currentPage >= totalPages - 1">
+      Next
+    </button>
+  </div>
+</div>
