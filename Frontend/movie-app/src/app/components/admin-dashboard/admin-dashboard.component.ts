@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { AdminService } from '../../services/admin/admin.service';
-import { MovieDto, Movie } from '../../models/movie-model';
+import { MovieDto } from '../../models/movie-model';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -14,15 +15,9 @@ import { CommonModule } from '@angular/common';
 export class AdminDashboardComponent {
   searchQuery: string = '';
   moviesFromOMDB: MovieDto[] = [];
-  moviesFromLocalDB: Movie[] = [];
-  selectedMovies: Set<string> = new Set(); // store imdbIDs
+  selectedMovies: Set<string> = new Set();
 
-  // Pagination for local DB
-  currentPage = 0;
-  pageSize = 5;
-  totalMovies = 0;
-
-  constructor(private adminService: AdminService) {}
+  constructor(private adminService: AdminService, private router: Router) {}
 
   searchOnOMDB() {
     this.adminService.searchOMDB(this.searchQuery).subscribe(
@@ -33,28 +28,13 @@ export class AdminDashboardComponent {
     );
   }
 
-  searchOnLocalDB() {
-    this.adminService
-      .searchLocalDB(this.currentPage, this.pageSize, this.searchQuery)
-      .subscribe(
-        (data) => {
-          this.moviesFromLocalDB = data.content;
-          this.totalMovies = data.totalElements;
-        },
-        (error) => console.error('Local DB search failed', error)
-      );
-  }
-
   toggleSelect(imdbID: string) {
-    if (this.selectedMovies.has(imdbID)) {
-      this.selectedMovies.delete(imdbID);
-    } else {
-      this.selectedMovies.add(imdbID);
-    }
+    this.selectedMovies.has(imdbID)
+      ? this.selectedMovies.delete(imdbID)
+      : this.selectedMovies.add(imdbID);
   }
 
   batchAddSelected() {
-    // Convert selected imdbIDs to MovieDto from OMDB movies
     const moviesToAdd = this.moviesFromOMDB.filter((m) =>
       this.selectedMovies.has(m.imdbID)
     );
@@ -66,38 +46,12 @@ export class AdminDashboardComponent {
       (addedMovies) => {
         alert(`${addedMovies.length} movies added successfully!`);
         this.selectedMovies.clear();
-        this.searchOnLocalDB(); // Refresh local DB list
       },
       (error) => console.error('Batch add failed', error)
     );
   }
 
-  batchRemoveSelected() {
-    // Collect the full MovieDto objects for selected movies from local DB by imdbID
-    const moviesToRemove: MovieDto[] = this.moviesFromLocalDB
-      .filter((m) => this.selectedMovies.has(m.imdbID))
-      .map((m) => ({
-        imdbID: m.imdbID,
-        Title: m.title,
-        Year: m.year,
-        Type: m.type,
-        Poster: m.poster,
-      }));
-
-    if (moviesToRemove.length === 0) {
-      alert('No movies selected for removal!');
-      return;
-    }
-
-    this.adminService.batchRemove(moviesToRemove).subscribe({
-      next: () => {
-        alert(`${moviesToRemove.length} movies removed successfully!`);
-        this.selectedMovies.clear();
-        this.searchOnLocalDB(); // Refresh local DB list
-      },
-      error: (err) => {
-        console.error('Batch remove failed', err);
-      },
-    });
+  goToLocalMovies(): void {
+    this.router.navigate(['/local-movies']);
   }
 }

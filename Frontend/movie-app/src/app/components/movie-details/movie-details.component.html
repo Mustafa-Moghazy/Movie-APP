@@ -1,0 +1,7 @@
+<div *ngIf="movie" class="movie-details-container">
+  <h2>{{ movie.title }}</h2>
+  <img [src]="movie.poster" alt="Movie Poster" width="200" />
+  <p><strong>Year:</strong> {{ movie.year }}</p>
+  <p><strong>Type:</strong> {{ movie.type }}</p>
+  <button (click)="Back()">Back To Dashboard</button>
+</div>

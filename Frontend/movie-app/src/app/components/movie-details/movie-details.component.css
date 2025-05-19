@@ -1,0 +1,27 @@
+.movie-details-container {
+  max-width: 600px;
+  margin: auto;
+  text-align: center;
+  padding: 1rem;
+}
+.movie-details-container img {
+  max-width: 100%;
+  border-radius: 12px;
+}
+.movie-details-container h2 {
+  font-size: 2rem;
+  margin: 1rem 0;
+}
+.movie-details-container p {
+  font-size: 1rem;
+  color: #555;
+}
+.movie-details-container button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  background-color: #007bff;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}

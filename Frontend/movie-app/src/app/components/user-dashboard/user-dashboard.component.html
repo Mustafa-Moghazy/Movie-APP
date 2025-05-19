@@ -21,14 +21,17 @@
 
   <div class="pagination">
     <button (click)="prevPage()" [disabled]="page === 0">Previous</button>
+
+    <span>Page {{ page + 1 }} of {{ totalPages }}</span>
+
     <button (click)="nextPage()" [disabled]="page >= totalPages - 1">
       Next
     </button>
   </div>
 
-  <div *ngIf="selectedMovie" class="selected-movie">
+  <!-- <div *ngIf="selectedMovie" class="selected-movie">
     <h3>{{ selectedMovie.title }}</h3>
     <p><strong>Year:</strong> {{ selectedMovie.year }}</p>
     <img [src]="selectedMovie.poster" alt="Selected Poster" width="200" />
-  </div>
+  </div> -->
 </div>

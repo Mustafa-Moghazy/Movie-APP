@@ -3,6 +3,7 @@ import { UserService } from '../../services/user/user.service';
 import { Movie } from '../../models/movie-model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-dashboard',
@@ -19,7 +20,7 @@ export class UserDashboardComponent {
   size = 5;
   totalPages = 0;
 
-  constructor(private userService: UserService) {
+  constructor(private userService: UserService, private router: Router) {
     this.loadMovies();
   }
 
@@ -44,9 +45,7 @@ export class UserDashboardComponent {
   }
 
   selectMovie(id: number): void {
-    this.userService.getMovieById(id).subscribe((movie) => {
-      this.selectedMovie = movie;
-    });
+    this.router.navigate(['/movie', id]);
   }
 
   nextPage(): void {
